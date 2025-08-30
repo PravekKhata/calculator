@@ -1,7 +1,12 @@
 const display = document.getElementById("display");
 
 function appendToDisplay(input){
-    display.value += input + " ";
+    const operators = ['+', '-', 'x', '/', '%'];
+    if(operators.includes(input)){
+        display.value += " " + input + " ";
+        return;
+    }
+    display.value += input;
 }
 
 function clearDisplay(){
@@ -49,14 +54,25 @@ function remainder(num1, num2){
 function calculate(){
     const arrOfInputs = display.value.trim().split(" ");
     console.log(arrOfInputs);
-    const num1 = parseInt(arrOfInputs[0]);
-    const operator = arrOfInputs[1];
-    const num2 = parseInt(arrOfInputs[2]);
+    if(arrOfInputs.length < 3){
+        display.value = "Error";
+        return;
+    }
 
-    console.log(typeof num1, typeof num2, typeof operator);
-    const result = operate(num1, operator, num2);
-    console.log(result);
-    display.value = result + " ";
+    let result = parseFloat(arrOfInputs[0]);
+
+    // iterate through arrOfInputs to find operator and num2
+    for(let i = 1; i < arrOfInputs.length; i += 2){
+        const operator = arrOfInputs[i];
+        const num2 = parseFloat(arrOfInputs[i+1]);
+
+        if(isNaN(num2)){
+            display.value = "Error";
+            return;
+        }
+        result = operate(result, operator, num2);
+    }
+    display.value = result;
 }
 
 function clearLastCharacter(){
